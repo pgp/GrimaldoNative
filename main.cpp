@@ -267,7 +267,7 @@ static void grimaldo_client_ev_handler(struct mg_connection *nc, int ev, void *u
     }
 }
 
-int grimaldo_client(const std::string private_key_path = "privk.privk",
+int grimaldo_client(const std::string private_key_path = "prvk.prvk",
                      const std::string connect_address = "127.0.0.1",
                      const uint16_t connect_port = 11112) {
     auto&& imported_pk = import_data(private_key_path);
@@ -304,7 +304,7 @@ int grimaldo_client(const std::string private_key_path = "privk.privk",
     return 0;
 }
 
-int gen_keypair(const std::string private_key_path = "privk.privk",
+int gen_keypair(const std::string private_key_path = "prvk.prvk",
                 const std::string public_key_path = "pubk.pubk") {
     std::vector<uint8_t> pk(SPX_PK_BYTES,0);
     std::vector<uint8_t> sk(SPX_SK_BYTES,0);
@@ -322,11 +322,11 @@ kp_gen_error:
 }
 
 int print_usage(char* prog_name) {
-    std::cout<<"Usage: "<<prog_name<<" client <--connect_address 127.0.0.1> <--connect_port 11112> <--private_key privk.privk>"<<std::endl;
+    std::cout<<"Usage: "<<prog_name<<" client <--connect_address 127.0.0.1> <--connect_port 11112> <--private_key prvk.prvk>"<<std::endl;
     std::cout<<"OR"<<std::endl;
     std::cout<<"Usage: "<<prog_name<<" server <--listen_address 0.0.0.0> <--listen_port 11112> <--public_key pubk.pubk>"<<std::endl;
     std::cout<<"OR"<<std::endl;
-    std::cout<<"Usage: "<<prog_name<<" gen <--private_key privk.privk> <--public_key pubk.pubk>"<<std::endl;
+    std::cout<<"Usage: "<<prog_name<<" gen <--private_key prvk.prvk> <--public_key pubk.pubk>"<<std::endl;
     std::cout<<"(all arguments except the exec mode - client,server,gen - are optional)"<<std::endl;
 
     return 0;
@@ -345,7 +345,7 @@ int parse_client_args_and_run(int argc, char* argv[]) {
     ArgumentParser parser("Client argument parser");
     parser.add_argument("-a", "--connect_address", "the connect address, default 127.0.0.1", false);
     parser.add_argument("-p", "--connect_port", "the connect port, default 11112", false);
-    parser.add_argument("-k", "--private_key", "the private key filename or path, default \"privk.privk\"", false);
+    parser.add_argument("-k", "--private_key", "the private key filename or path, default \"prvk.prvk\"", false);
     try {
         parser.parse(argc, argv);
     } catch (const ArgumentParser::ArgumentNotFound& ex) {
@@ -359,7 +359,7 @@ int parse_client_args_and_run(int argc, char* argv[]) {
     int port;
     if(custom_string_to_int(port_str,port)) port = 11112;
     auto key = parser.get<std::string>("k");
-    if(key.empty()) key = "privk.privk";
+    if(key.empty()) key = "prvk.prvk";
 
     return grimaldo_client(key,address,port);
 }
@@ -389,7 +389,7 @@ int parse_server_args_and_run(int argc, char* argv[]) {
 
 int parse_gen_args_and_run(int argc, char* argv[]) {
     ArgumentParser parser("Server argument parser");
-    parser.add_argument("-j", "--private_key", "the private key filename or path, default \"privk.privk\"", false);
+    parser.add_argument("-j", "--private_key", "the private key filename or path, default \"prvk.prvk\"", false);
     parser.add_argument("-k", "--public_key", "the public key filename or path, default \"pubk.pubk\"", false);
     try {
         parser.parse(argc, argv);
@@ -399,7 +399,7 @@ int parse_gen_args_and_run(int argc, char* argv[]) {
     }
     if (parser.is_help()) return -2;
     auto private_key = parser.get<std::string>("j");
-    if(private_key.empty()) private_key = "privk.privk";
+    if(private_key.empty()) private_key = "prvk.prvk";
     auto public_key = parser.get<std::string>("k");
     if(public_key.empty()) public_key = "pubk.pubk";
 

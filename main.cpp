@@ -114,7 +114,8 @@ static void grimaldo_server_ev_handler(struct mg_connection *nc, int ev, void *u
 
     switch(ev) {
         case MG_EV_RECV:
-            std::cout<<"RECEIVE EVENT"<<std::endl;
+            fwrite("=",1,1,stdout);
+            // std::cout<<"RECEIVE EVENT"<<std::endl;
             /**
              * step #1:
              * receive from client:

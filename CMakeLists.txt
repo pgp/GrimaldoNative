@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 include_directories(mongoose sphincsplus argparse)
 
-add_compile_options(-fpermissive -frtti -fexceptions)
+add_compile_options(-O2 -fpermissive -frtti -fexceptions)
 
 set(SRC_FILES
         mongoose/mongoose.c

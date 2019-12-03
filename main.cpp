@@ -8,6 +8,7 @@
 #include <chrono>
 #include <vector>
 #include <string>
+#include <ctime>
 
 #include "argparse.h"
 #include "mongoose.h"
@@ -34,6 +35,15 @@ void ltrim(std::string& s,  const std::string& delimiters = " \f\n\r\t\v" ) {
 
 void trim(std::string& s, const std::string& delimiters = " \f\n\r\t\v" ) {
     s.erase( s.find_last_not_of( delimiters ) + 1 ).erase( 0, s.erase( s.find_last_not_of( delimiters ) + 1 ).find_first_not_of( delimiters ) );
+}
+
+std::string getCurrentTimeAsFormattedString() {
+    time_t t = time(nullptr);
+    struct tm tm = *localtime(&t);
+    std::string ct;
+    ct.resize(25);
+    sprintf((char*)ct.c_str(),"%d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1,tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    return ct;
 }
 
 std::string get_current_session() {
@@ -145,7 +155,9 @@ static void grimaldo_server_ev_handler(struct mg_connection *nc, int ev, void *u
                 verificationResult = crypto_sign_verify(ud->signedResponse, SIGNATURE_MAX_SIZE,
                                                         ud->challenge_P, 2*CHALLENGE_SIZE,
                                                         grimaldo_server_pubkey);
-                std::cout<<"Verification "<<(verificationResult?"failed":"OK")<<std::endl;
+
+                auto&& currentTime = getCurrentTimeAsFormattedString();
+                std::cout<<"Verification "<<(verificationResult?"failed":"OK")<<" at "<<currentTime<<std::endl;
 
                 if(verificationResult == 0) {
                     unlock_session();

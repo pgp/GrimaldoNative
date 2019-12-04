@@ -46,6 +46,22 @@ std::string getCurrentTimeAsFormattedString() {
     return ct;
 }
 
+void print_interface_addresses() {
+#ifdef _WIN32
+    system("ipconfig");
+#else
+#ifdef __APPLE__
+    system("ifconfig");
+#else
+#ifdef __linux__
+    system("ip addr");
+#else // assume BSD
+    system("ifconfig");
+#endif
+#endif
+#endif
+}
+
 std::string get_current_session() {
     constexpr size_t DATA_SIZE = 512;
     char data[DATA_SIZE];
@@ -211,6 +227,8 @@ int grimaldo_server(const std::string public_key_path = "pubk.pubk",
     }
     grimaldo_server_pubkey = new uint8_t[imported_pk.size()];
     memcpy(grimaldo_server_pubkey,&imported_pk[0],imported_pk.size());
+
+    print_interface_addresses();
 
     std::cout<<"Running in server mode, listening on address "<<listen_address<<", port "<<listen_port<<", public key file: "<<public_key_path<<std::endl;
     struct mg_mgr mgr{};
